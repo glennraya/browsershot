@@ -16,6 +16,7 @@ import { useDateFormatter } from '@react-aria/i18n'
 import { RangeValue } from '@react-types/shared'
 import { DateValue } from '@react-types/datepicker'
 import { useState } from 'react'
+import axios from 'axios'
 
 export default function Dashboard({ auth, products }: PageProps) {
     // Handle the simple pagination navigation.
@@ -52,7 +53,7 @@ export default function Dashboard({ auth, products }: PageProps) {
             <div className="container mx-auto p-8 sm:px-6 lg:px-8 dark:text-white">
                 <div className="mb-4 flex items-center gap-4">
                     <DateRangePicker
-                        className="max-w-xs"
+                        className="max-w-xs dark:dark"
                         value={dateValue}
                         onChange={setDateValue}
                         variant="bordered"

@@ -24,7 +24,7 @@
                 <div class="flex flex-col gap-y-4">
                     <span class="flex flex-col font-bold">
                         <span class="text-base">{{ $payload['name'] }}</span>
-                        <span class="font-normal text-[10px] text-gray-500">- The company I failed to build</span>
+                        <span class="font-normal text-[10px] text-gray-500">Absolutely fictional incorporation</span>
                     </span>
                 </div>
             </div>

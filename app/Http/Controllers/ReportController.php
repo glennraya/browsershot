@@ -38,9 +38,7 @@ class ReportController extends Controller
 
         Browsershot::html($template)
             ->showBackground()
-            ->margins(4, 0, 4, 0)
-            // ->landscape()
-            ->format('Tabloid')
-            ->save(storage_path('/app/reports/') . 'example.pdf');
+            ->margins(4, 4, 4, 4)
+            ->save(storage_path('/app/reports/example.pdf'));
     }
 }
