@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Report Template</title>
-    <script src="https://code.highcharts.com/highcharts.js"></script>
 
     @vite('resources/css/app.css')
 
@@ -22,10 +21,10 @@
                 </div>
 
                 {{-- Company name, address --}}
-                <div class="flex flex-col gap-y-4 mt-3">
+                <div class="flex flex-col gap-y-4">
                     <span class="flex flex-col font-bold">
-                        <span class="text-gray-400">Company</span>
                         <span class="text-base">{{ $payload['name'] }}</span>
+                        <span class="font-normal text-[10px] text-gray-500">- The company I failed to build</span>
                     </span>
                 </div>
             </div>
@@ -34,7 +33,7 @@
                 <div class="flex">
                     <span class="font-light">Date Generate: {{ now()->format('l, F j, Y') }}</span>
                 </div>
-                
+
                 {{-- Contacts --}}
                 <div class="flex flex-col">
                     <p>Address: {{ $payload['address'] }}</p>
@@ -45,6 +44,7 @@
         </div>
     </div>
 
+    {{-- SVG Charts --}}
     <div class="container mx-auto my-8">
         <div class="flex w-full">
             <div id="bar-container" class="w-full"></div>
@@ -62,25 +62,26 @@
                     <th class="pb-2">Qty</th>
                     <th class="pb-2 text-right">Price</th>
                     <th class="px-0 pb-2 text-right">Subtotal</th>
+                    <th class="px-0 pb-2 text-right">Date Purchased</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
-                {{-- @foreach ($payload['items'] as $item)
-                    {{ $item['product']['name'] }}
-                @endforeach --}}
                 @php
                     $total_price = 0;
                 @endphp
                 @foreach ($payload['items'] as $item)
                     @php
-                        $total_price += $item['product']['price'] * $item['quantity'];
+                        $total_price += $item['price'] * $item['total_quantity_sold'];
                     @endphp
                     <tr>
-                        <td class="py-1">{{ $item['product']['name']}}</td>
-                        <td class="py-1">{{ $item['quantity'] }}</td>
-                        <td class="py-1 text-right">${{ number_format($item['product']['price'], 2) }}</td>
+                        <td class="py-1">{{ $item['name']}}</td>
+                        <td class="py-1">{{ $item['total_quantity_sold'] }}</td>
+                        <td class="py-1 text-right">${{ number_format($item['price'], 2) }}</td>
                         <td class="py-1 text-right">
-                            ${{ number_format($item['product']['price'] * $item['quantity'], 2) }}
+                            ${{ number_format($item['price'] * $item['total_quantity_sold'], 2) }}
+                        </td>
+                        <td class="py-1 text-right">
+                            {{ Carbon\Carbon::create($item['date_purchased'])->format('l, F j, Y') }}
                         </td>
                     </tr>
                 @endforeach
@@ -92,7 +93,7 @@
         <div class="flex flex-col">
             {{-- Subtotal, tax rate, tax amount and the
                  grand total for the invoice. --}}
-            {{-- <div class="flex flex-col w-full mb-4">
+            <div class="flex flex-col w-full mb-4">
                 <div class="flex justify-between">
                     <span>Subtotal</span>
                     <span class="font-bold">${{ number_format($total_price, 2) }}</span>
@@ -113,59 +114,12 @@
             <div class="flex w-auto bg-black font-medium px-4 py-2 text-white justify-between items-center rounded-lg">
                 <span class="uppercase text-gray-400 font-bold mr-10">Total</span>
                 <span class="text-base font-bold">${{ number_format($total_price + $tax_amount, 2) }}</span>
-            </div> --}}
+            </div>
         </div>
     </div>
 
-    {{-- <script>
-        const chartData = @json($payload['top_selling']);
-
-        const colors = [
-            '#FF6384', // Red
-            '#36A2EB', // Blue
-            '#FFCE56', // Yellow
-            '#4BC0C0', // Green
-            '#9966FF'  // Purple
-        ];
-
-        const labels = Object.keys(chartData);
-        const datasets = [];
-
-        labels.forEach(year => {
-            chartData[year].forEach((product, index) => {
-                if (!datasets[index]) {
-                    datasets[index] = {
-                        label: product.name,
-                        data: [],
-                        backgroundColor: colors[index % colors.length], // Use fixed colors
-                        borderColor: colors[index % colors.length], // Use fixed colors
-                        borderWidth: 1
-                    };
-                }
-                datasets[index].data.push(product.total_quantity_sold);
-            });
-        });
-
-
-        const ctx = document.getElementById('myChart').getContext('2d');
-        const topSellingProductsChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: datasets
-            },
-            options: {
-                animation: {
-                    duration: 0 // Disable animation
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    </script> --}}
+    {{-- Highcharts.js Library --}}
+    <script src="https://code.highcharts.com/highcharts.js"></script>
     <script type="text/javascript">
         Highcharts.chart('bar-container', {
             chart: {
@@ -176,10 +130,10 @@
                 align: 'left'
             },
             xAxis: {
-                categories: [2021, 2022, 2023, 204],
+                categories: [2021, 2022, 2023, 2024],
                 crosshair: true,
                 accessibility: {
-                    description: 'Countries'
+                    description: 'Consumer Electronics'
                 }
             },
             yAxis: {
@@ -187,9 +141,6 @@
                 title: {
                     text: 'Number of units sold'
                 }
-            },
-            tooltip: {
-                valueSuffix: ' (1000 MT)'
             },
             plotOptions: {
                 animation: {
@@ -265,32 +216,27 @@
                     },
                     data: [
                         {
-                            name: 'Water',
-                            y: 55.02
+                            name: 'Phones',
+                            y: 55.02,
+                            sliced: true,
+                            selected: false,
                         },
                         {
-                            name: 'Fat',
+                            name: 'Tablets',
                             sliced: true,
-                            selected: true,
+                            selected: false,
                             y: 26.71
                         },
                         {
-                            name: 'Carbohydrates',
-                            y: 1.09
+                            name: 'Laptops',
+                            y: 15.5,
+                            sliced: true,
+                            selected: false,
                         },
-                        {
-                            name: 'Protein',
-                            y: 15.5
-                        },
-                        {
-                            name: 'Ash',
-                            y: 1.68
-                        }
                     ]
                 }
             ]
         });
-
     </script>
 </body>
 </html>
