@@ -12,11 +12,9 @@ import {
     Button,
     DateRangePicker
 } from '@nextui-org/react'
-import { useDateFormatter } from '@react-aria/i18n'
 import { RangeValue } from '@react-types/shared'
 import { DateValue } from '@react-types/datepicker'
 import { useState } from 'react'
-import axios from 'axios'
 
 export default function Dashboard({ auth, products }: PageProps) {
     // Handle the simple pagination navigation.
@@ -32,7 +30,7 @@ export default function Dashboard({ auth, products }: PageProps) {
     })
 
     const [productsCopy, setProductsCopy] = useState(products)
-    const filter = () => {
+    const generate = () => {
         router.post('filter', {
             start: dateValue.start.toDate(getLocalTimeZone()),
             end: dateValue.end.toDate(getLocalTimeZone())
@@ -53,18 +51,18 @@ export default function Dashboard({ auth, products }: PageProps) {
             <div className="container mx-auto p-8 sm:px-6 lg:px-8 dark:text-white">
                 <div className="mb-4 flex items-center gap-4">
                     <DateRangePicker
-                        className="max-w-xs dark:dark"
+                        className="max-w-xs"
                         value={dateValue}
                         onChange={setDateValue}
-                        variant="bordered"
+                        variant="flat"
                     />
                     <Button
                         variant="flat"
                         color="default"
-                        className="bg-black text-white"
-                        onClick={filter}
+                        className="dark:text-white"
+                        onClick={generate}
                     >
-                        Filter
+                        Generate
                     </Button>
                 </div>
 
@@ -102,10 +100,9 @@ export default function Dashboard({ auth, products }: PageProps) {
                 {/* Pagination URL Links */}
                 <div className="mt-2 flex justify-start gap-2">
                     <Button
-                        className="bg-white font-medium text-black"
+                        className="font-medium dark:text-white"
                         size="sm"
-                        variant="faded"
-                        color="primary"
+                        variant="flat"
                         isDisabled={!products.prev_page_url}
                         onPress={() => handlePageChange(products.prev_page_url)}
                     >
@@ -113,10 +110,9 @@ export default function Dashboard({ auth, products }: PageProps) {
                     </Button>
 
                     <Button
-                        className="bg-white font-medium text-black"
+                        className="font-medium dark:text-white"
                         size="sm"
-                        variant="faded"
-                        color="primary"
+                        variant="flat"
                         isDisabled={!products.next_page_url}
                         onPress={() => handlePageChange(products.next_page_url)}
                     >

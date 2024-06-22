@@ -51,7 +51,7 @@ export default function Authenticated({
                 </div>
             </div>
 
-            <main className="my-3 ml-0 mr-3 flex w-full rounded-xl border border-gray-200 bg-white shadow-sm md:ml-80 dark:border-gray-800 dark:bg-gray-800 dark:shadow-none">
+            <main className="my-3 ml-0 mr-3 flex w-full rounded-xl border border-gray-200 bg-white shadow-sm md:ml-80 dark:border-gray-800 dark:bg-gray-900 dark:shadow-none">
                 {children}
             </main>
         </div>

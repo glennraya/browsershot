@@ -49,7 +49,6 @@ Route::get('/report', function (Request $request) {
 });
 
 Route::get('/dashboard', function () {
-
     return Inertia::render('Dashboard', [
         'products' => Product::simplePaginate(10),
     ]);
