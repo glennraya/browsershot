@@ -12,7 +12,7 @@ class ReportController extends Controller
 {
     public function generateReport(Request $request)
     {
-        $top_selling = Product::select(
+        $sales = Product::select(
             'products.name',
             'products.price',
             DB::raw('sales.date_purchased'),
@@ -31,14 +31,16 @@ class ReportController extends Controller
             'phone' => '+1 999-000-7777',
             'email' => 'xyz@example.com',
             'tax_rate' => 12.99,
-            'items' => $top_selling,
+            'items' => $sales,
         ];
 
         $template = view('report', ['payload' => $payload])->render();
 
         Browsershot::html($template)
             ->showBackground()
-            ->margins(4, 4, 4, 4)
+            ->margins(4, 0, 4, 0)
+            // ->landscape()
+            ->format('A4')
             ->save(storage_path('/app/reports/example.pdf'));
     }
 }
